@@ -1,1 +1,29 @@
-https://objects.githubusercontent.com/github-production-release-asset-2e65be/632300123/dce00512-be6f-4cf6-8b1e-24653e6e8d81?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20230710%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230710T103705Z&X-Amz-Expires=300&X-Amz-Signature=7925deba206f5104047ac166e77b7a0f4e2c4afb829b1853a3bdfc3a5a6fc9df&X-Amz-SignedHeaders=host&actor_id=12823463&key_id=0&repo_id=632300123&response-content-disposition=attachment%3B%20filename%3D111.zip&response-content-type=application%2Foctet-stream
+docker run -d --name sonarqube -p 6004:9000 \
+--link postgres \
+-v /home/apps/sonarqube/extensions:/opt/sonarqube/extensions \
+-v /home/apps/sonarqube/logs:/opt/sonarqube/logs \
+-v /home/apps/sonarqube/data:/opt/sonarqube/data \
+-e SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/sonar \
+-e SONARQUBE_JDBC_USERNAME=sonar \
+-e SONARQUBE_JDBC_PASSWORD=sonar \
+--restart always \
+--privileged=true \
+sonarqube:8.9.2-community
+
+
+docker logs sonarqube
+# 添加6004端口
+firewall-cmd --zone=public --add-port=6004/tcp --permanent
+ 
+# 重新载入
+firewall-cmd --reload
+
+docker run -d --name sonarqube \
+    -p 9000:9000 \
+    -e SONAR_JDBC_URL=... \
+    -e SONAR_JDBC_USERNAME=... \
+    -e SONAR_JDBC_PASSWORD=... \
+    -v sonarqube_data:/opt/sonarqube/data \
+    -v sonarqube_extensions:/opt/sonarqube/extensions \
+    -v sonarqube_logs:/opt/sonarqube/logs \
+    <image_name>
