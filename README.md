@@ -45,3 +45,22 @@ new_name="new_folder_name"
 
 # 调用函数进行递归查找并替换
 replace_in_directory "$directory" "$old_name" "$new_name"
+
+
+
+
+业务中台
+
+
+#!/bin/bash
+
+# 指定目录和要替换的目录名
+directory="/path/to/search"
+old_name="old_folder_name"
+new_name="new_folder_name"
+
+# 递归查找并替换
+find "$directory" -type d -name "*$old_name*" -print0 | while IFS= read -r -d '' folder; do
+    new_folder=$(echo "$folder" | sed "s/$old_name/$new_name/")
+    mv "$folder" "$new_folder" && echo "Renamed: $folder -> $new_folder"
+done
