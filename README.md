@@ -6,18 +6,18 @@ rename_folders() {
     local old_name="$2"
     local new_name="$3"
     
-    # 递归处理子目录
-    for folder in "$directory"/*/; do
-        if [ -d "$folder" ]; then
-            rename_folders "$folder" "$old_name" "$new_name"
-        fi
-    done
-    
     # 处理当前目录
     for folder in "$directory"/*/; do
         if [ -d "$folder" ] && [[ "$folder" == *"$old_name"* ]]; then
             new_folder="${folder//$old_name/$new_name}"
             mv "$folder" "$new_folder" && echo "Renamed: $folder -> $new_folder"
+        fi
+    done
+    
+    # 递归处理子目录
+    for folder in "$directory"/*/; do
+        if [ -d "$folder" ]; then
+            rename_folders "$folder" "$old_name" "$new_name"
         fi
     done
 }
